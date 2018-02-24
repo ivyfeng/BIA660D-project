@@ -159,10 +159,12 @@ def process_relation_triplet(triplet):
 
     # Process (PERSON, likes, PERSON) relations need to modify  output is wrong
     if root.lemma_ == 'like':
-        if triplet.subject in [e.text for e in doc.ents if e.label_ == 'PERSON'] and triplet.object in [e.text for e in doc.ents if e.label_ == 'PERSON']:
-            s = add_person(triplet.subject)
-            o = add_person(triplet.object)
-            s.likes.append(o)
+        if "n't" not in triplet.predicate:
+            if triplet.subject in [e.text for e in doc.ents if e.label_ == 'PERSON'] and triplet.object in [e.text for e in doc.ents if e.label_ == 'PERSON']:
+                s = add_person(triplet.subject)
+                o = add_person(triplet.object)
+                s.likes.append(o)
+
 
     if root.lemma_ == 'be' and triplet.object.startswith('friends with'):
         fw_doc = nlp(unicode(triplet.object))
@@ -256,9 +258,6 @@ def answer_question(question=' '):
             pet = get_persons_pet(person.name)
             if pet and pet.type == pet_type:
                 print(answer.format(person.name, pet_type))
-
-
-
 
     # retrieve answers for questions like (WHO, like, PERSON)
     # again this is just an example, NOT the best way to do things. That's for you to figure out.
