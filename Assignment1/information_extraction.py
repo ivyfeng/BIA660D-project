@@ -197,13 +197,13 @@ def process_relation_triplet(triplet):
 
             s_person.has.append(pet)
 
-  ## process relation (PET, HAS)
+  ## process relation (PERSON, has, PET)
 
-   if root.lemma =='have' and ('dog' in triplet.object or 'cat' in triplet.object):
-  #      if triplet.subject in [e.text for e in doc.ents if e.label_ == 'PERSON'] and triplet.object in [e.text for e in doc.ents if e.label_== 'PET']:
-            s = add_person(triplet.subject)
-            o = add_person(triplet.object)
-            s_person.has.append(pet)
+    if root.lemma_ == 'have' and ('dog' in triplet.object or 'cat' in triplet.object):
+        person = add_person(triplet.subject)
+        s_pet_type = 'dog' if 'dog' in triplet.object else 'cat'
+        pet = add_pet(s_pet_type)
+        person.has.append(pet)
 
 def preprocess_question(question):
     # remove articles: a, an, the
@@ -248,43 +248,17 @@ def answer_question(question=' '):
     doc = nlp(triplet_sentence)
     root = doc[:].root
 
-    # retrieve answers for questions like (WHO, has, PET)
-    # here's one just for dogs
-    # you should really check the verb... this is just an example not the best way to do things
- #   if q_trip.subject.lower() == 'who' and q_trip.object == 'dog' or q_trip.object == 'cat':
-
- #       answer = '{} has a {} named {}.'
-
- #      for person in persons:
- #           pet = get_persons_pet(person.name)
- #          if pet and pet.type == 'dog':
- #              print(answer.format(person.name, 'dog', pet.name))
- #           if pet and pet.type == 'cat':
- #               print(answer.format(person.name, 'cat', pet.name))
-
-    # For q1:Who has a <pet_type>? (e.g. Who has a dog?)
-    if q_trip.subject.lower() == 'who' and q_trip.object == 'dog' or q_trip.object == 'cat':
-
+   # To answer qusetion 1)	Who has a <pet_type>?
+    if q_trip.subject.lower() == 'who' and ('dog' in q_trip.object or 'cat' in q_trip.object):
         answer = '{} has a {}.'
-
+        pet_type = 'dog' if 'dog' in q_trip.object else 'cat'
         for person in persons:
             pet = get_persons_pet(person.name)
-            if pet and pet.type == 'dog':
-                print(answer.format(person.name, 'dog'))
-            if pet and pet.type == 'cat':
-                print(answer.format(person.name, 'cat'))
+            if pet and pet.type == pet_type:
+                print(answer.format(person.name, pet_type))
 
 
 
-    ## who has a cat
-  ##  if q_trip.subject.lower() == 'who' and q_trip.object == 'cat':
-
-  #      answer = '{} has a {} named {}.'
-
-   #     for person in persons:
-   #         pet = get_persons_pet(person.name)
-   #         if pet and pet.type == 'cat':
-    #            print(answer.format(person.name, 'cat', pet.name))
 
     # retrieve answers for questions like (WHO, like, PERSON)
     # again this is just an example, NOT the best way to do things. That's for you to figure out.
