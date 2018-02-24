@@ -160,7 +160,7 @@ def process_relation_triplet(triplet):
     # Process (PERSON, likes, PERSON) relations need to modify  output is wrong
     if root.lemma_ == 'like':
         if "n't" not in triplet.predicate:
-            if triplet.subject in [e.text for e in doc.ents if e.label_ == 'PERSON'] and triplet.object in [e.text for e in doc.ents if e.label_ == 'PERSON']:
+            if triplet.subject in [e.text for e in doc.ents if e.label_ == 'PERSON' or e.label_ == 'ORG'] and triplet.object in [e.text for e in doc.ents if e.label_ == 'PERSON']:
                 s = add_person(triplet.subject)
                 o = add_person(triplet.object)
                 s.likes.append(o)
